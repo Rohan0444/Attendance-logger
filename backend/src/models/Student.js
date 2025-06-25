@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const studentSchema = new mongoose.Schema({
     fullName: {
         type: String,
-        required: true,
+        required: true, 
     },
     email: {
         type: String,
@@ -40,10 +40,10 @@ const studentSchema = new mongoose.Schema({
         type: [Number],
         default: [],
     },
-    registeredCourses: {
+    registeredCourses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
-    },
+    }],
     isOnboarded: {
         type: Boolean,
         default: false,

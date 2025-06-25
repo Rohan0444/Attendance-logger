@@ -1,23 +1,23 @@
-import express from "express";
-import { protectRoute } from "../middleware/auth.middleware.js";
-import { allowOnly } from "../middleware/roleCheck.middleware.js";
-import { onboardStudent, onboardFaculty } from "../controllers/onboard.controller.js";
+// import express from "express";
+// import { protectRoute } from "../middleware/auth.middleware.js";
+// import { allowOnly } from "../middleware/roleCheck.middleware.js";
+// import { onboardStudent, onboardFaculty } from "../controllers/onboard.controller.js";
 
 
-const router = express.Router();
+// const router = express.Router();
 
-// Students must have valid JWT with role="student"
-router.post("/student",
-  protectRoute,
-  allowOnly("student"),
-  onboardStudent
-);
+// // Students must have valid JWT with role="student"
+// router.post("/student",
+//   protectRoute,
+//   allowOnly("student"),
+//   onboardStudent
+// );
 
-// Faculty must have valid JWT with role="faculty"
-router.post("/faculty",
-  protectRoute,
-  allowOnly("faculty"),
-  onboardFaculty
-);
+// // Faculty must have valid JWT with role="faculty"
+// router.post("/faculty",
+//   protectRoute,
+//   allowOnly("faculty"),
+//   onboardFaculty
+// );
 
-export default router;
+// export default router;

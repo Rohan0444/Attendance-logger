@@ -16,10 +16,11 @@
     "dotenv": "^16.5.0",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.16.0",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.13.2",
     "multer": "^2.0.0",
     "practice_proj1": "file:..",
+    "python-shell": "^5.0.0",
     "stream-chat": "^8.60.0"
   },
   "devDependencies": {

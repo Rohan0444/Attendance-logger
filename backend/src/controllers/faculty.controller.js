@@ -138,7 +138,26 @@ export async function removeStudentFromCourse(req, res) {
 }
 
 export async function startAttendance(req, res) {
-     
+     const courseId = req.params.courseId;
+    try {
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+        markingAttendance(course.code).then(result => {
+            if (result.error) { 
+                return res.status(500).json({ message: result.error });
+            }   
+        }).catch(error => {
+            console.error("Error marking attendance:", error);
+            return res.status(500).json({ message: "Internal server error" });
+        });
+    
+    }
+    catch (error) {
+        console.error("Error starting attendance:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 export async function getCourseJoinRequests(req, res) {
@@ -218,3 +237,44 @@ export async function rejectCourseRequest(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+async function markingAttendance(course_code){
+    return new Promise((resolve, reject) => {
+        const scriptPath = path.resolve(__dirname,'../python/mark_attendance.py'); // Adjust the path to your Python script
+        const py = spawn('python', [scriptPath], {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          env: {
+            ...process.env, // inherit environment variables
+          }
+        });
+    
+        let stdout = '';
+        let stderr = '';
+    
+        py.stdout.on('data', data => {
+          stdout += data.toString();
+        });
+        py.stderr.on('data', data => {
+          stderr += data.toString();
+        });
+    
+        py.on('close', code => {
+          if (code !== 0) {
+            return reject(new Error(`Python exited ${code}: ${stderr}`));
+          }
+          try {
+            const arr = JSON.parse(stdout);
+            if (arr.error) {
+              return reject(new Error(arr.error));
+            }
+            resolve(arr);         // <— return the 128-dim array here
+          } catch (e) {
+            reject(new Error(`Invalid JSON from Python: ${e.message}`));
+          }
+        });
+    
+        // send the Base64 payload and close stdin
+        py.stdin.write(JSON.stringify({ coursecode : course_code}));
+        py.stdin.end();
+      });
+}

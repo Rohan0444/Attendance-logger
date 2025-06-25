@@ -1,7 +1,15 @@
 import { upsertStreamUser } from "../lib/stream.js";
 import Student from "../models/Student.js";
 import Faculty from "../models/Faculty.js";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; 
+import {spawn} from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function login(req, res) {
     const { email, password } = req.body;
@@ -68,10 +76,11 @@ export async function login(req, res) {
 };
 
 export async function signupStudent(req, res) {
-    const { fullName, email, password, rollno } = req.body;
+    const { fullName, email, password, rollno,profilePhotoUrl } = req.body;
+    // profile phot url is required and is in 64 bit coded format
 
     try {
-        if (!fullName || !email || !password || !rollno) {
+        if (!fullName || !email || !password || !rollno||!profilePhotoUrl) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -90,15 +99,16 @@ export async function signupStudent(req, res) {
             return res.status(400).json({ message: "Email already exists" });
         }
 
-        const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
-        const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-
+        // const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
+        // const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+        const face_encoding = await getEmbedding(profilePhotoUrl);
         const newStudent = await Student.create({
             fullName,
             email,
             password,
-            profilePhotoUrl: randomAvatar,
+            profilePhotoUrl: profilePhotoUrl,
             rollno,
+            faceEncoding: face_encoding,
         });
 
         try{
@@ -134,10 +144,10 @@ export async function signupStudent(req, res) {
 }
 
 export async function signupFaculty(req, res) {
-    const { fullName, email, password, facultyId } = req.body;
+    const { fullName, email, password, facultyId,profilePhotoUrl } = req.body;
 
     try {
-        if (!fullName || !email || !password || !facultyId) {
+        if (!fullName || !email || !password || !facultyId|| !profilePhotoUrl) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -156,15 +166,16 @@ export async function signupFaculty(req, res) {
             return res.status(400).json({ message: "Email already exists" });
         }
 
-        const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
-        const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-
+        // const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
+        // const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+        const face_encoding = await getEmbedding(profilePhotoUrl);
         const newFaculty = await Faculty.create({
             fullName,
             email,
             password,
             facultyId,
-            profilePhotoUrl: randomAvatar,
+            profilePhotoUrl: profilePhotoUrl,
+            faceEncoding: face_encoding,
         });
 
         try{
@@ -203,3 +214,44 @@ export function logout(req, res) {
   res.clearCookie("jwt");
   res.status(200).json({ success: true, message: "Logout successful" });
 }
+
+export async function getEmbedding(url){
+    return new Promise((resolve, reject) => {
+    const scriptPath = path.resolve(__dirname,'../python/embedding_generator.py'); // Adjust the path to your Python script
+    const py = spawn('python', [scriptPath], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: {
+        ...process.env, // inherit environment variables
+      }
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    py.stdout.on('data', data => {
+      stdout += data.toString();
+    });
+    py.stderr.on('data', data => {
+      stderr += data.toString();
+    });
+
+    py.on('close', code => {
+      if (code !== 0) {
+        return reject(new Error(`Python exited ${code}: ${stderr}`));
+      }
+      try {
+        const arr = JSON.parse(stdout);
+        if (arr.error) {
+          return reject(new Error(arr.error));
+        }
+        resolve(arr);         // <— return the 128-dim array here
+      } catch (e) {
+        reject(new Error(`Invalid JSON from Python: ${e.message}`));
+      }
+    });
+
+    // send the Base64 payload and close stdin
+    py.stdin.write(JSON.stringify({ image: url }));
+    py.stdin.end();
+  });
+ }

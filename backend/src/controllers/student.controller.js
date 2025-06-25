@@ -1,6 +1,6 @@
 import Student from '../models/Student.js';
 import Course from '../models/Course.js';
-
+import { getEmbedding } from './auth.controller.js';
 export async function getStudentDetails(req, res) {
     try {
         // you have to return two things: courses in which user is registered and the courses in which user is valid(same sem, branch but not registered)
@@ -53,12 +53,12 @@ export async function updateStudentProfile(req, res) {
     try {
         const { fullName, semester, profilePhotoUrl } = req.body;
         if (!fullName || !semester) {
-            return res.status(400).json({ message: 'Full name and email are required' });
+            return res.status(400).json({ message: 'Full name and semester are required' });
         }
-
+        const face_encoding = await getEmbedding(profilePhotoUrl);
         const updatedStudent = await Student.findByIdAndUpdate(
             req.user._id,
-            { fullName, semester, profilePhotoUrl },
+            { fullName, semester, profilePhotoUrl, faceEncoding: face_encoding },
             { new: true }
         );
 

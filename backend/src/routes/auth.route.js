@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/login", login);
 router.post("/student/signup", signupStudent);
-router.post("/faculty/signup", signupFaculty);
+router.post("/faculty/signup", signupFaculty); 
 router.post("/logout", logout);
 
 // check if user is logged in

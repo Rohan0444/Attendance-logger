@@ -13,7 +13,7 @@ const facultySchema = new mongoose.Schema({
         lowercase: true,
         trim: true,
     },
-    password: {
+    password: { 
         type: String,
         required: true,
         minlength: 6,
