@@ -1,0 +1,70 @@
+<% layout("/layouts/boilerplate") %>
+<body class="bg-success">
+    <h1 class="text-center text-white">Student Onboarding</h1>
+    </br> </br> </br>
+    <div class="justify-content-center d-flex mb-3">
+           <label for="department" class="text-white "><h4>Department:</h4></label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <input type="text" name="department" id="department" placeholder="department " class="form-control bg-success-subtle" required>
+    </div>
+    </br></br></br>
+    <div class="justify-content-center d-flex mb-3">
+        <label for="semester" class="text-white "><h4>Semester:</h4></label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp; &nbsp;&nbsp;
+        <input type="text" name="semester" id="semester" placeholder="semester " class="form-control bg-success-subtle" required>
+    </div>
+    </br></br></br>
+    <video id="video" width="320" height="240" autoplay></video><br>
+    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas><br>
+    </br>
+    <img id="capturedImage" width="320" height="240" style="display:none; border:1px solid #ccc;">
+</br></br>
+    <button id="capture" class="btn btn-warning">Capture Photo</button>
+    <button id="submit" class="btn btn-info">Submit</button>
+    <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const capturedImage = document.getElementById('capturedImage');
+    let imageBase64 = '';
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => video.srcObject = stream)
+      .catch(err => console.error('Webcam error:', err));
+
+    document.getElementById('capture').addEventListener('click', () => {
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      imageBase64 = canvas.toDataURL('image/png');
+      capturedImage.src = imageBase64;
+      capturedImage.style.display = 'block';
+
+      alert('Image Captured!');
+    });
+    document.getElementById('submit').addEventListener('click', async () => {
+      const department = document.getElementById('department').value;
+      const semester = document.getElementById('semester').value;
+
+      // Here you can handle the form submission, e.g., send the data to your server
+      if (!imageBase64 || !department || !semester) {
+        alert('Please fill all fields and capture photo.');
+        return;
+      }
+
+      // If all fields are filled, you can send the data to your server
+      const formData = {
+        department,
+        semester,
+        ImgURL: imageBase64
+      };
+      const res = await fetch('/api/onboard/student', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const result = await res.json();
+      alert(result.message || 'Registration complete!');
+      // You can use fetch or axios to send the formData to your server
+    });
+    </script>
+</body>

@@ -7,6 +7,9 @@ import { onboardStudent, onboardFaculty } from "../controllers/onboard.controlle
 const router = express.Router();
 
 // Students must have valid JWT with role="student"
+router.get("/student",(req,res)=>{
+    res.render("Students/student-onboard.ejs")
+})
 router.post("/student",
   protectRoute,
   allowOnly("student"),

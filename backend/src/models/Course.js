@@ -36,7 +36,7 @@ const courseSchema = new mongoose.Schema({
     branch: {
         type: String,
         required: true,
-        enum: ["CSE", "ECE", "EEE", "CE", "BT", "ME", "MME"],
+        enum: ["CSE", "ECE", "EEE", "CE", "BT", "ME", "MME","MNC"],
     },
     faculty: {
         type: mongoose.Schema.Types.ObjectId,

@@ -5,9 +5,15 @@ import { allowOnly } from "../middleware/roleCheck.middleware.js";
 
 const router = express.Router();
 
+router.get("/login", (req, res) => {
+  res.render("login/login-page.ejs");
+});
 router.post("/login", login);
+router.get("/student/signup",(req,res) =>{
+  res.render("Students/student-signup.ejs")
+})
 router.post("/student/signup", signupStudent);
-router.post("/faculty/signup", signupFaculty);
+router.post("/faculty/signup", signupFaculty); 
 router.post("/logout", logout);
 
 // check if user is logged in
