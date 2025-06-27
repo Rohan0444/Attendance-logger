@@ -76,11 +76,10 @@ export async function login(req, res) {
 };
 
 export async function signupStudent(req, res) {
-    const { fullName, email, password, rollno,profilePhotoUrl } = req.body;
-    // profile phot url is required and is in 64 bit coded format
+    const { fullName, email, password, rollno } = req.body;
 
     try {
-        if (!fullName || !email || !password || !rollno||!profilePhotoUrl) {
+        if (!fullName || !email || !password || !rollno) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -101,14 +100,13 @@ export async function signupStudent(req, res) {
 
         // const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
         // const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-        const face_encoding = await getEmbedding(profilePhotoUrl);
+        //const face_encoding = await getEmbedding(profilePhotoUrl);
         const newStudent = await Student.create({
             fullName,
             email,
             password,
-            profilePhotoUrl: profilePhotoUrl,
+           // profilePhotoUrl: profilePhotoUrl,
             rollno,
-            faceEncoding: face_encoding,
         });
 
         try{
@@ -134,8 +132,7 @@ export async function signupStudent(req, res) {
             sameSite: "strict", // prevent CSRF attacks
             secure: process.env.NODE_ENV === "production",
         });
-
-        res.status(201).json({success: true, user: newStudent, role: "student" });
+        res.redirect("http://localhost:5001/api/onboard/student");
     }
     catch (error) {
         console.error("Error during student signup:", error);
