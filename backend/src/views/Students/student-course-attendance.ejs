@@ -1,0 +1,26 @@
+<% layout('/layouts/boilerplate') %>
+<body class="bg-success bg-opacity-75">
+    <h2 class="text-center text-white">
+        course attendance for <%= course.name %> - <%= course.code %>
+    </h2>
+    <div class="container mt-4">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% attendanceRecords.forEach(record => { %>
+                    <tr>
+                        <td><%= record.date.toDateString() %></td>
+                        <td><%= record.time %></td>
+                        <td><%= record.status %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>

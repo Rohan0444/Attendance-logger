@@ -46,7 +46,8 @@ export async function onboardStudent(req, res) {
         catch(error){
             console.error("Error upserting Stream user:", error);
         }
-        return res.status(200).json({ success: true, user: updatedStudent, role: "student" });
+        
+      res.redirect("http://localhost:5001/api/students/home");
     }
     catch (error) {
         console.error("Error during student onboarding:", error);

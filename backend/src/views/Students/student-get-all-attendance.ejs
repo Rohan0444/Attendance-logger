@@ -1,0 +1,46 @@
+  <% layout('/layouts/boilerplate') %>
+  <body class="bg-success bg-opacity-75">
+      <ul class="nav nav-pills justify-content-center bg-warning bg-gradient">
+       <li class="nav-item">
+           <a class="btn btn-warning"  href="http://localhost:5001/api/students/home">Home</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/students/profile">Profile</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="active btn btn-success " aria-current="page" href="http://localhost:5001/api/students/attendance">Attendance</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/auth/logout">Logout</a>
+       </li>
+    </ul>
+    </br></br>
+    <h2 class="text-center text-white">Full attendance records</h2>
+    </br></br>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% Object.keys(groupedRecords).forEach(courseId => { %>
+                <tr>
+                    <td colspan="3" class="table-primary"><%= groupedRecords[courseId].course.code %></td>
+                </tr>
+                <% groupedRecords[courseId].records.forEach(record => { %>
+                    <tr>
+                        <td></td>
+                        <td><%= record.date %></td>
+                        <td><%= record.status %></td>
+                    </tr>
+                <% }) %>
+            <% }) %>
+        </tbody>
+    </table>
+  </body>

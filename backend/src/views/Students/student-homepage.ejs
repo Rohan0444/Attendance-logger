@@ -1,0 +1,85 @@
+<% layout('/layouts/boilerplate') %>
+<body class="bg-success bg-opacity-75">
+    <ul class="nav nav-pills justify-content-center bg-warning bg-gradient">
+       <li class="nav-item">
+           <a class="active btn btn-success" aria-current="page" href="http://localhost:5001/api/students/home">Home</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/students/profile">Profile</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/students/attendance">Attendance</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/auth/logout">Logout</a>
+       </li>
+    </ul>
+    </br></br>
+    <h2 class="text-center text-white">Welcome <%= student.fullName %> !</h2>
+    </br></br>
+    <div class="accordion" id="RegisteredCourses">
+        <div class="accordion-item">
+            <h2 class = "accordion-header">
+                <button class="accordion-button bg-warning text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Registered Courses
+                </button>
+            </h2>
+            <div id="collapseOne" class = "accordion-collapse collapse show" data-bs-parent="#RegisteredCourses">
+                <div class="accordion-body">
+                    <ul class="list-group">
+                        <% student.registeredCourses.forEach(course => { %>
+                            <li class="list-group-item">
+                                <div>
+                                    <%= course.name %> - <%= course.code %>
+                                </div>
+                            </br>
+                                <div>
+                                    branch: <%= course.branch %> | semester: <%= course.semester %>
+                                </div>
+                            </br>
+                                <div>
+                                    <a href="http://localhost:5001/api/students/courses/<%= course._id %>/attendance" class="btn btn-primary">View Attendance</a>
+                                </div>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br></br>
+    <div class="accordion" id="pendingCourses">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button bg-warning text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    Pending Courses
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#pendingCourses">
+                <div class="accordion-body">
+                    <ul class="list-group">
+                        <% availableCourses.forEach(course => { %>
+                            <li class="list-group-item">
+                                <div>
+                                    <%= course.name %> - <%= course.code %>
+                                </div>
+                                <div>
+                                    branch: <%= course.branch %> | semester: <%= course.semester %>
+                                </div>
+                                <div>
+                                    faculty: <%= course.faculty.fullName %> | email: <%= course.faculty.email %>
+                                </div>
+                                <div>
+                                    <a href="http://localhost:5001/api/students/courses/enroll/<%= course._id %>" class="btn btn-primary">Enroll</a>
+                                </div>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

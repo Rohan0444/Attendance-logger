@@ -1,7 +1,11 @@
 import Faculty from "../models/Faculty.js";
 import Course from "../models/Course.js";
 import Student from "../models/Student.js";
-
+import { spawn } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(__filename);
 export async function getFacultyHome(req, res) {
     // fetch faculty courses
     try {
