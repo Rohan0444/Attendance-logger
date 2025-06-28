@@ -1,35 +1,43 @@
 import Faculty from "../models/Faculty.js";
 import Course from "../models/Course.js";
 import Student from "../models/Student.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { spawn } from "child_process";
 
 export async function getFacultyHome(req, res) {
-    // fetch faculty courses
     try {
         const faculty = await Faculty.findById(req.user._id).populate("coursesTaught");
         if (!faculty) {
-            return res.status(404).json({ message: "Faculty not found" });
+            return res.status(404).render("error", { message: "Faculty not found" });
         }
 
-        res.status(200).json({ courses: faculty.coursesTaught, role: "faculty" });
+        res.render("/faculty/home.ejs", {
+            courses: faculty.coursesTaught,
+            role: "faculty",
+            user: faculty
+        });
     } catch (error) {
         console.error("Error fetching faculty home:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }   
-};
+        res.status(500).render("error", { message: "Internal server error" });
+    }
+}
+
 
 export async function getFacultyProfile(req, res) {
     try {
         const faculty = await Faculty.findById(req.user._id);
         if (!faculty) {
-            return res.status(404).json({ message: "Faculty not found" });
+            return res.status(404).render("error", { message: "Faculty not found" });
         }
 
-        res.status(200).json(faculty);
+        res.render("faculty/show.ejs", { faculty });
     } catch (error) {
         console.error("Error fetching faculty profile:", error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).render("error", { message: "Internal server error" });
     }
 }
+
 
 export async function updateFacultyProfile(req, res) {
     try {
@@ -77,7 +85,11 @@ export async function createCourse(req, res) {
         await newCourse.save(); // Save the course to the database
         await Faculty.findByIdAndUpdate(req.user._id, { $push: { coursesTaught: newCourse._id } });
 
-        res.status(201).json({course: newCourse});
+        res.status(201).render("faculty/home.ejs", {
+            courses: [newCourse], // Pass the newly created course to the view
+            role: "faculty",
+            user: req.user // Assuming req.user contains faculty details
+        });
     } catch (error) {
         console.error("Error creating course:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -237,6 +249,9 @@ export async function rejectCourseRequest(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+const _filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(_filename);
 
 async function markingAttendance(course_code){
     return new Promise((resolve, reject) => {

@@ -1,0 +1,33 @@
+<% layout("/layouts/boilerplate2") %>
+
+<body class="bg-light">
+  <div class="container mt-5">
+    <h1 class="mb-4 text-primary">Courses</h1>
+    <p class="lead">Welcome to the Dashboard</p>
+
+    <% if (courses.length === 0) { %>
+      <div class="alert alert-warning text-center mt-5">
+        <h4>No courses found.</h4>
+        <p>You haven’t created any courses yet. <a href="/api/faculty/course" class="btn btn-sm btn-outline-primary mt-2">Create One</a></p>
+      </div>
+    <% } else { %>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-3">
+        <% courses.forEach(course => { %>
+          <div class="col">
+            <div class="card shadow h-100">
+              <div class="card-body">
+                <h5 class="card-title text-dark"><%= course.name %></h5>
+                <p class="card-text"><strong>Code:</strong> <%= course.code %></p>
+                <p class="card-text"><strong>Branch:</strong> <%= course.branch %></p>
+                <p class="card-text"><strong>Semester:</strong> <%= course.semester %></p>
+              </div>
+              <div class="card-footer bg-white border-top-0">
+                <a href="/api/faculty/courses/<%= course._id %>" class="btn btn-outline-primary w-100">View Course</a>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</body>

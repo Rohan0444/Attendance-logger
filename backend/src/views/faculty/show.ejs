@@ -1,0 +1,21 @@
+<% layout("/layouts/boilerplate2") %>
+
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Faculty Profile</h4>
+      </div>
+      <div class="card-body">
+        <p><strong>Full Name:</strong> <%= faculty.fullName %></p>
+        <p><strong>Email:</strong> <%= faculty.email %></p>
+        <p><strong>Faculty ID:</strong> <%= faculty.facultyId %></p>
+        <p><strong>Department:</strong> <%= faculty.department %></p>
+        <p><strong>Designation:</strong> <%= faculty.designation %></p>
+      </div>
+      <div class="card-footer text-end">
+        <a href="/api/faculty/profile/edit" class="btn btn-outline-primary">Edit Profile</a>
+      </div>
+    </div>
+  </div>
+</body>
