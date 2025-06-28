@@ -16,19 +16,29 @@ export async function getStudentDetails(req, res) {
             semester: student.semester,
             branch: student.branch,
             _id: { $ne: student.registeredCourses._id } // Exclude already registered course
-        }).populate('faculty', 'name email designation');
+        }).populate('faculty', 'fullName email designation');
 
-        res.status(200).json({
+        // res.status(200).json({
+        //     student: {
+        //         fullName: student.fullName,
+        //         email: student.email,
+        //         profilePhotoUrl: student.profilePhotoUrl,
+        //         registeredCourses: student.registeredCourses,
+        //         isOnboarded: student.isOnboarded
+        //     },
+        //     availableCourses: courses
+        // });
+        res.render('Students/student-homepage.ejs', {
             student: {
                 fullName: student.fullName,
                 email: student.email,
                 profilePhotoUrl: student.profilePhotoUrl,
                 registeredCourses: student.registeredCourses,
-                isOnboarded: student.isOnboarded
+                isOnboarded: student.isOnboarded,
+                id: student._id,
             },
             availableCourses: courses
         });
-
     } catch (error) {
         console.error('Error fetching student details:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -42,7 +52,18 @@ export async function getStudentProfile(req, res) {
             return res.status(404).json({ message: 'Student not found' });
         }
 
-        res.status(200).json(student);
+        res.render('Students/student-profile.ejs', {
+            student: {
+                fullName: student.fullName,
+                email: student.email,
+                profilePhotoUrl: student.profilePhotoUrl,
+                registeredCourses: student.registeredCourses,
+                isOnboarded: student.isOnboarded,
+                semester: student.semester,
+                department: student.department,
+                id: student._id,
+            }
+        });
     } catch (error) {
         console.error('Error fetching student profile:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -55,7 +76,8 @@ export async function updateStudentProfile(req, res) {
         if (!fullName || !semester) {
             return res.status(400).json({ message: 'Full name and semester are required' });
         }
-        const face_encoding = await getEmbedding(profilePhotoUrl);
+        let face_encoding;
+        face_encoding = await getEmbedding(profilePhotoUrl);
         const updatedStudent = await Student.findByIdAndUpdate(
             req.user._id,
             { fullName, semester, profilePhotoUrl, faceEncoding: face_encoding },
@@ -126,7 +148,16 @@ export async function getAttendanceRecords(req, res) {
             };
         });
 
-        res.status(200).json(attendanceRecords);
+        res.render('Students/student-course-attendance.ejs', {
+            course: {   
+                name: course.name,
+                code: course.code,
+                semester: course.semester,
+                branch: course.branch,
+                faculty: course.faculty,
+            },
+            attendanceRecords: attendanceRecords,
+        });
     } catch (error) {
         console.error('Error fetching attendance records:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -164,7 +195,15 @@ export async function getAllAttendanceRecords(req, res) {
             });
         });
 
-        res.status(200).json(groupedRecords);
+        res.render('Students/student-get-all-attendance.ejs', {
+            // student: {
+            //     fullName: student.fullName,
+            //     email: student.email,
+            //     profilePhotoUrl: student.profilePhotoUrl,
+            //     isOnboarded: student.isOnboarded,
+            // },
+            groupedRecords: groupedRecords
+        });
 
     } catch (error) {
         console.error('Error fetching all attendance records:', error);

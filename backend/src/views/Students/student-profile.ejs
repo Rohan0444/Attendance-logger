@@ -1,0 +1,124 @@
+<% layout('/layouts/boilerplate') %>
+<body class="bg-success bg-opacity-75">
+    <ul class="nav nav-pills justify-content-center bg-warning bg-gradient">
+       <li class="nav-item">
+           <a class="btn btn-warning"  href="http://localhost:5001/api/students/home">Home</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="active btn btn-success" aria-current="page" href="http://localhost:5001/api/students/profile">Profile</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/students/attendance">Attendance</a>
+       </li>
+       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+       <li class="nav-item">
+           <a class="btn btn-warning " href="http://localhost:5001/api/auth/logout">Logout</a>
+       </li>
+    </ul>
+    <div class="container mt-4 d-flex justify-content-center">
+        <div class="card justify-content-center" style="width: 18rem;">
+        <img src="<%= student.profilePhotoUrl %>" class="card-img-top xyz" alt="Profile Photo">
+        <div class="card-body text-center">
+            <button class="btn btn-primary photo">Edit Profile photo</button>
+        </div>
+        <div>
+            <label for="fullName">Full Name:</label>
+            <input type="text" name="fullName" id="fullName" value="<%= student.fullName %>" class="form-control bg-success-subtle" required>
+            <label for="email">Email:</label>
+            <div id="email" name="email" class="form-control bg-success-subtle"> 
+                <%= student.email %>
+            </div>
+            <label for="branch">Branch:</label>
+            <div id="branch" name="branch" class="form-control bg-success-subtle">
+                <%= student.department %>
+            </div>
+            <label for="semester">Semester:</label>
+            <input type="text" name="semester" id="semester" value="<%= student.semester %>" class="form-control bg-success-subtle" required>
+        </br>
+            <button class="btn btn-primary edit">Edit</button>
+        </div>
+        </div>
+    </div>
+        <script>
+            let imageBase64 = '<%= student.profilePhotoUrl %>';
+            document.querySelector('.edit').addEventListener('click', async () => {
+                const fullName = document.getElementById('fullName').value;
+                const semester = document.getElementById('semester').value;
+                const profilePhotoUrl = imageBase64;
+
+                if (!fullName || !semester) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                const res = await fetch('http://localhost:5001/api/students/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ fullName, semester, profilePhotoUrl })
+                });
+
+                if (res.ok) {
+                    alert('Profile updated successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Failed to update profile');
+                }
+            });
+
+            document.querySelector('.photo').addEventListener('click', async () => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                //const capturedImage = document.createElement('img');
+                const captureButton = document.createElement('button');
+                captureButton.textContent = 'Capture Photo';
+                const okButton = document.createElement('button');
+                okButton.textContent = 'OK';
+                video.width = 320;
+                video.height = 240;
+                canvas.width = 320;
+                canvas.height = 240;
+                document.body.appendChild(video);
+                document.body.appendChild(canvas);
+                //document.body.appendChild(capturedImage);
+                document.body.appendChild(captureButton);
+                document.body.appendChild(okButton);
+
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(err => console.error('Webcam error:', err));
+
+                captureButton.addEventListener('click', () => {
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, 320, 240);
+                    imageBase64 = canvas.toDataURL('image/png');
+                    //capturedImage.src = imageBase64;
+                    //capturedImage.style.display = 'block';
+                    //capturedImage.style.border = '1px solid #ccc';
+                    alert('Image Captured!');
+                    //document.querySelector('.photo').setAttribute('src', imageBase64);
+                });
+
+                okButton.addEventListener('click', async () => {
+                    if (!imageBase64) {
+                        alert('Please capture a photo');
+                        return;
+                    }
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    document.body.removeChild(video);
+                    document.body.removeChild(canvas);
+                    //document.body.removeChild(capturedImage);
+                    document.body.removeChild(captureButton);
+                    document.body.removeChild(okButton);
+                    xyz = document.querySelector('.xyz');
+                    xyz.src = imageBase64;
+                });
+            });
+        </script>
+</body>    

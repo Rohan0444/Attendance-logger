@@ -1,10 +1,11 @@
 import Faculty from "../models/Faculty.js";
 import Course from "../models/Course.js";
 import Student from "../models/Student.js";
+import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
-import { spawn } from "child_process";
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 export async function getFacultyHome(req, res) {
     try {
         const faculty = await Faculty.findById(req.user._id).populate("coursesTaught");
@@ -249,10 +250,6 @@ export async function rejectCourseRequest(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
-const _filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(_filename);
-
 async function markingAttendance(course_code){
     return new Promise((resolve, reject) => {
         const scriptPath = path.resolve(__dirname,'../python/mark_attendance.py'); // Adjust the path to your Python script
