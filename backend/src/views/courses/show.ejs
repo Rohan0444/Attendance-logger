@@ -1,0 +1,66 @@
+<% layout("/layouts/boilerplate2") %>
+
+<body class="bg-light">
+  <div class="container mt-5">
+
+    <!-- Course Information -->
+    <div class="mb-4">
+      <h2 class="text-primary"><%= course.name %> (<%= course.code %>)</h2>
+      <p><strong>Branch:</strong> <%= course.branch %></p>
+      <p><strong>Semester:</strong> <%= course.semester %></p>
+    </div>
+
+    <!-- Start Attendance Button -->
+    <div class="mb-5">
+    <form action="/api/faculty/courses/<%= course._id %>/attendance/start" method="POST">
+        <button type="submit" class="btn btn-success">Start Taking Attendance</button>
+    </form>
+    </div>
+
+
+    <!-- Pending Students -->
+    <div class="mb-5">
+      <h4 class="mb-3">Pending Student Requests</h4>
+
+      <% if (course.pendingStudents.length === 0) { %>
+        <div class="alert alert-info">No student has requested to join this course.</div>
+      <% } else { %>
+        <div class="list-group">
+          <% course.pendingStudents.forEach(student => { %>
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong><%= student.fullName %></strong> (<%= student.email %>)
+              </div>
+              <div>
+                <form action="/courses/<%= course._id %>/students/<%= student._id %>/accept" method="POST" class="d-inline">
+                  <button class="btn btn-sm btn-outline-success" type="submit">Accept</button>
+                </form>
+                <form action="/courses/<%= course._id %>/students/<%= student._id %>/reject" method="POST" class="d-inline ms-2">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Reject</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Enrolled Students -->
+    <div class="mb-5">
+      <h4 class="mb-3">Enrolled Students</h4>
+
+      <% if (course.enrolledStudents.length === 0) { %>
+        <div class="alert alert-warning">No students have been enrolled in this course yet.</div>
+      <% } else { %>
+        <ul class="list-group">
+          <% course.enrolledStudents.forEach(student => { %>
+            <li class="list-group-item">
+              <strong><%= student.fullName %></strong> (<%= student.email %>)
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+
+  </div>
+</body>

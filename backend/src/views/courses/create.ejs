@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate2") %>
+
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="mb-4 text-primary">Create New Course</h2>
+
+    <form action="/courses" method="POST" class="bg-white p-4 rounded shadow-sm">
+      <div class="mb-3">
+        <label for="name" class="form-label">Course Name</label>
+        <input type="text" class="form-control" id="name" name="name" required placeholder="Enter course name">
+      </div>
+
+      <div class="mb-3">
+        <label for="code" class="form-label">Course Code</label>
+        <input type="text" class="form-control" id="code" name="code" required placeholder="Enter course code">
+      </div>
+
+      <div class="mb-3">
+        <label for="semester" class="form-label">Semester</label>
+        <select class="form-select" id="semester" name="semester" required>
+          <option value="" disabled selected>Select semester</option>
+          <% for(let i = 1; i <= 10; i++) { %>
+            <option value="<%= i %>"><%= i %></option>
+          <% } %>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="branch" class="form-label">Branch</label>
+        <select class="form-select" id="branch" name="branch" required>
+          <option value="" disabled selected>Select branch</option>
+          <% ["CSE", "ECE", "EEE", "CE", "BT", "ME", "MME", "MNC"].forEach(branch => { %>
+            <option value="<%= branch %>"><%= branch %></option>
+          <% }); %>
+        </select>
+      </div>
+
+      <!-- Faculty will be set on the backend using req.user._id -->
+
+      <button type="submit" class="btn btn-primary w-100">Create Course</button>
+    </form>
+  </div>
+</body>

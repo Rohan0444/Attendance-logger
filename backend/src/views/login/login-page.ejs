@@ -1,15 +1,22 @@
 <% layout("/layouts/boilerplate") %>
-<body class="text-center bg-success">
-    <h1 class="text-center text-white">Login</h1>
-    <form id="loginForm" class="p-4">
-        <div class="mb-3">
-            <label for="email" class="form-label text-white">Email</label>
-            <input type="email" class="form-control bg-success-subtle" id="email" required placeholder="Enter your email">
+<body class="bg-success d-flex flex-column justify-content-center align-items-center min-vh-100 text-center">
+    <h1 class="text-white mb-4">Login</h1>
+
+    <form id="loginForm" class="mx-auto p-4 bg-success-subtle rounded shadow w-100" style="max-width: 400px;" action="/api/auth/login" method="POST">
+        <div class="mb-3 text-start">
+            <label for="email" class="form-label text-black">Email</label>
+            <input type="email" class="form-control" id="email" required placeholder="Enter your email">
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label text-white">Password</label>
-            <input type="password" class="form-control bg-success-subtle" id="password" required placeholder="Enter your password">
+        <div class="mb-3 text-start">
+            <label for="password" class="form-label text-black">Password</label>
+            <input type="password" class="form-control" id="password" required placeholder="Enter your password">
         </div>
-        <button type="submit" class="btn btn-warning">Login</button>
+        <button type="submit" class="btn btn-warning w-100">Login</button>
     </form>
+
+    <div class="mt-4 text-white">
+        <p>Don't have an account?</p>
+        <a href="student/signup" class="btn btn-outline-light me-2">Sign Up as Student</a>
+        <a href="faculty/signup" class="btn btn-outline-light">Sign Up as Faculty</a>
+    </div>
 </body>

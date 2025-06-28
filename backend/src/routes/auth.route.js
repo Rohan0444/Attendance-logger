@@ -12,6 +12,9 @@ router.post("/login", login);
 router.get("/student/signup",(req,res) =>{
   res.render("Students/student-signup.ejs")
 })
+router.get("/faculty/signup",(req,res) =>{
+  res.render("faculty/faculty-signup.ejs")
+})
 router.post("/student/signup", signupStudent);
 router.post("/faculty/signup", signupFaculty); 
 router.post("/logout", logout);

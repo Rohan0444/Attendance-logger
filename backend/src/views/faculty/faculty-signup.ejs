@@ -1,0 +1,23 @@
+<% layout("/layouts/boilerplate") %>
+<body class="bg-success">
+    <h1 class="text-white text-center">Faculty Signup</h1>
+    <form action="/api/auth/faculty/signup" method="POST">
+        <div class="mb-3">
+            <label for="fullName" class="form-label text-white">Full Name</label>
+            <input type="text" class="form-control bg-success-subtle" id="fullName" name="fullName" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label text-white">Email</label>
+            <input type="email" class="form-control bg-success-subtle" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label text-white">Password</label>
+            <input type="password" class="form-control bg-success-subtle" id="password" name="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="facultyId" class="form-label text-white">Faculty ID</label>
+            <input type="text" class="form-control bg-success-subtle" id="facultyId" name="facultyId" required>
+        </div>
+        <button type="submit" class="btn btn-warning">Sign Up</button>
+    </form>
+</body>

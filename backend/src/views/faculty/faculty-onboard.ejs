@@ -1,0 +1,94 @@
+<% layout("/layouts/boilerplate") %>
+<body class="bg-success d-flex flex-column justify-content-center align-items-center min-vh-100 text-center">
+
+    <div class="bg-success-subtle p-5 rounded shadow mx-auto" style="max-width: 500px; width: 100%;">
+        <h1 class="text-black mb-4">Faculty Onboarding</h1>
+
+        <form action="/student/onboard" method="POST">
+            <div class="mb-4 text-start">
+                <label for="department" class="form-label text-black fs-5">Department:</label>
+                <select name="department" id="department" class="form-select" required>
+                    <option value="" disabled selected>Select your department</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="CE">CE</option>
+                    <option value="BT">BT</option>
+                    <option value="ME">ME</option>
+                    <option value="MME">MME</option>
+                </select>
+            </div>
+
+            <div class="mb-4 text-start">
+                <label for="designation" class="form-label text-black fs-5">Designation:</label>
+                <select name="designation" id="designation" class="form-select" required>
+                    <option value="" disabled selected>Select your designation</option>
+                    <option value="Professor">Professor</option>
+                    <option value="Associate Professor">Associate Professor</option>
+                    <option value="Assistant Professor">Assistant Professor</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">Submit</button>
+        </form>
+    </div>
+    
+</body>
+
+    <!--
+    </br></br></br>
+    <video id="video" width="320" height="240" autoplay></video><br>
+    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas><br>
+    </br>
+    <img id="capturedImage" width="320" height="240" style="display:none; border:1px solid #ccc;">
+</br></br>
+    <button id="capture" class="btn btn-warning">Capture Photo</button>
+    <button id="submit" class="btn btn-info">Submit</button> -->
+    <!-- <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const capturedImage = document.getElementById('capturedImage');
+    let imageBase64 = '';
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => video.srcObject = stream)
+      .catch(err => console.error('Webcam error:', err));
+
+    document.getElementById('capture').addEventListener('click', () => {
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      imageBase64 = canvas.toDataURL('image/png');
+      capturedImage.src = imageBase64;
+      capturedImage.style.display = 'block';
+
+      alert('Image Captured!');
+    });
+    document.getElementById('submit').addEventListener('click', async () => {
+      const department = document.getElementById('department').value;
+      const semester = document.getElementById('semester').value;
+
+      // Here you can handle the form submission, e.g., send the data to your server
+      if (!imageBase64 || !department || !semester) {
+        alert('Please fill all fields and capture photo.');
+        return;
+      }
+
+      // If all fields are filled, you can send the data to your server
+      const formData = {
+        department,
+        semester,
+        ImgURL: imageBase64
+      };
+      const res = await fetch('/api/onboard/faculty', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const result = await res.json();
+      alert(result.message || 'Registration complete!');
+      // You can use fetch or axios to send the formData to your server
+    });
+    </script>
+</body> -->

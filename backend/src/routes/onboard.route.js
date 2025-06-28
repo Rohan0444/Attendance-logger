@@ -16,6 +16,9 @@ router.post("/student",
   onboardStudent);
 
 // Faculty must have valid JWT with role="faculty"
+router.get("/faculty",(req,res)=>{
+    res.render("faculty/faculty-onboard.ejs")
+})
 router.post("/faculty",
   protectRoute,
   allowOnly("faculty"),
