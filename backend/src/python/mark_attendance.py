@@ -12,8 +12,8 @@ load_dotenv()
 mongo_uri = os.getenv("MONGO_URI")
 client = MongoClient(mongo_uri)
 db = client['attendance_db']
-collection_Students = db['Students']
-collection_Course = db["Course"]
+collection_Students = db['students']
+collection_Course = db["courses"]
 
 def start_attendance(course_code):
     course = collection_Course.find_one({"code": course_code})
@@ -62,7 +62,7 @@ def start_attendance(course_code):
                     marked_students.append(name)
                     attendance_record = {
                         "course":course["_id"],
-                        "date": datetime.now().date(),
+                        "date":  datetime.now().strftime('%Y-%m-%d'),
                         "status": "Present"
                     }
                     stud = collection_Students.find_one({"rollno": name})
@@ -97,7 +97,7 @@ def start_attendance(course_code):
         if student["rollno"] not in marked_students:
             attendance_record = {
                 "course": course["_id"],
-                "date": datetime.now().date(),
+                "date": datetime.now().strftime('%Y-%m-%d'),
                 "status": "Absent"
             }
             stud = collection_Students.find_one({"rollno": student["rollno"]})
@@ -107,8 +107,8 @@ def start_attendance(course_code):
             })
             collection_Students.update_one({"rollno": student["rollno"]}, {"$push": {"attendanceRecords": attendance_record}})
     session = {
-        "date" : datetime.now().date(),
-        "time" : datetime.now().time(),
+        "date" : datetime.now().strftime('%Y-%m-%d'),
+        "time" : datetime.now().strftime('%H:%M:%S'),
         "records": records,
     }
     collection_Course.update_one({"_id": course["_id"]}, {"$push": {"attendanceSessions": records}})
@@ -121,8 +121,12 @@ def start_attendance(course_code):
 
 def main():
     payload = json.loads(sys.stdin.read())
-    course_code = payload.get("coursecode")
-    start_attendance(course_code)
-    print(json.dumps({"status": "success"}))
-    
-    
+    course_code = payload.get("course_code")
+    try:
+        start_attendance(course_code)
+        print(json.dumps({"status": "success"}))
+    except Exception as e:
+        print(json.dumps({"status": "error", "message": str(e)}))
+
+if __name__ == "__main__":
+    main()

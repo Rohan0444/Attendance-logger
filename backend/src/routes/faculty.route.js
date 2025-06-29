@@ -102,21 +102,21 @@ router.delete("/courses/:courseId", deleteCourse);                // Delete cour
 router.delete("/courses/:courseId/students/:studentId", removeStudentFromCourse); // Remove student
 
 // Attendance
-router.get("/courses/:courseId/attendance/start", (req, res) => {
-  // Render attendance page for the course
-  res.render("courses/attendance.ejs", {
-    course: {
-      _id: "11",
-      name: "Sample Course",
-      code: "CSE101",
-      semester: "1",
-      branch: "CSE"
-    },
-    role: "faculty",
-    user: req.user // Assuming req.user contains faculty details
-  });
-}); // View attendance page for a course
-router.post("/courses/:courseId/attendance/start", startAttendance);
+// router.get("/courses/:courseId/attendance/start", (req, res) => {
+//   // Render attendance page for the course
+//   res.render("courses/attendance.ejs", {
+//     course: {
+//       _id: "11",
+//       name: "Sample Course",
+//       code: "CSE101",
+//       semester: "1",
+//       branch: "CSE"
+//     },
+//     role: "faculty",
+//     user: req.user // Assuming req.user contains faculty details
+//   });
+// }); // View attendance page for a course
+router.get("/courses/:courseId/attendance/start", startAttendance);
 
 // Join Requests
 router.get("/courses/:courseId/requests", getCourseJoinRequests); // View pending join requests

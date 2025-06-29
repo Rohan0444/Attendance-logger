@@ -271,6 +271,7 @@ async function markingAttendance(course_code){
         });
     
         py.on('close', code => {
+            console.log("RAW PYTHON STDOUT:", JSON.stringify(stdout)); 
           if (code !== 0) {
             return reject(new Error(`Python exited ${code}: ${stderr}`));
           }
@@ -286,7 +287,7 @@ async function markingAttendance(course_code){
         });
     
         // send the Base64 payload and close stdin
-        py.stdin.write(JSON.stringify({ coursecode : course_code}));
+        py.stdin.write(JSON.stringify({ course_code : course_code}));
         py.stdin.end();
       });
 }

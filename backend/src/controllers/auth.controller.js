@@ -141,10 +141,10 @@ export async function signupStudent(req, res) {
 }
 
 export async function signupFaculty(req, res) {
-    const { fullName, email, password, facultyId,profilePhotoUrl } = req.body;
+    const { fullName, email, password, facultyId } = req.body;
 
     try {
-        if (!fullName || !email || !password || !facultyId|| !profilePhotoUrl) {
+        if (!fullName || !email || !password || !facultyId) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -165,14 +165,14 @@ export async function signupFaculty(req, res) {
 
         // const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
         // const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-        const face_encoding = await getEmbedding(profilePhotoUrl);
+        //const face_encoding = await getEmbedding(profilePhotoUrl);
         const newFaculty = await Faculty.create({
             fullName,
             email,
             password,
             facultyId,
-            profilePhotoUrl: profilePhotoUrl,
-            faceEncoding: face_encoding,
+            // profilePhotoUrl: profilePhotoUrl,
+            // faceEncoding: face_encoding,
         });
 
         try{
